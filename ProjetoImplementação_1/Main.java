@@ -1,55 +1,40 @@
 package ProjetoImplementação_1;
 
-import java.util.Scanner;
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.BufferedReader;
+import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws FileNotFoundException, IOException {
+
+    public static void main(String[] args) throws FileNotFoundException {
         Scanner teclado = new Scanner(System.in);
-        String arquivoTxt = "ProjetoImplementação_1/graph-test-100-1.txt";
-        Grafos grafoMatriz = new Grafos(779); // Coloque aqui o numero de arestas do arquivo sendo lido.
-        LerArquivo(arquivoTxt, grafoMatriz);// Leitura do arquivo e geração da matriz
-        grafoMatriz.imprimirMatriz(); // Impressao para a visualizacao da matriz
-        String teste = teclado.nextLine();
-        while (!teste.equals("FIM")) { // Enquanto teste fôr diferente de FIM, o usuário continuará testando vértices
-            int vert = Integer.parseInt(teste); // Converte para um inteiro
-            int saida = grafoMatriz.getGrauSaida(vert);
-            System.out.println("O grau de saida deste vertice e de: " + saida);
-            int entrada = grafoMatriz.getGrauEntrada(vert);
-            System.out.println("O grau de entrada deste vertice e de: " + entrada);
-            System.out.println("Os predecessores deste vertice sao: ");
-            grafoMatriz.getPredecessores(vert);
-            System.out.println("Os sucessores deste vertice sao: ");
-            grafoMatriz.getSucessores(vert);
-            teste = teclado.nextLine();
-        }
+        String arquivo = "ProjetoImplementacao_1/graph-test-100-1.txt"; //Mudar o path/nome do arquivo
+        LerArquivo(arquivo);
         teclado.close();
     }
 
-    public static void LerArquivo(String arquivo, Grafos grafoMatriz) throws IOException {
-        try (BufferedReader leitor = new BufferedReader(new FileReader(arquivo))) {
-            leitor.readLine(); // Pula o cabeçalho.
-            String linha;
-
-            while ((linha = leitor.readLine()) != null) {
-                linha = linha.trim(); // Remove espaços do início e fim
-                if (linha.isEmpty())
-                    continue; // Ignora linhas vazias após o trim()
-
-                // Divide por um ou mais espaços
-                String[] tokens = linha.split("\\s+");
-
-                try {
-                    int vertice1 = Integer.parseInt(tokens[0]);
-                    int vertice2 = Integer.parseInt(tokens[1]);
-                    grafoMatriz.adicionarAresta(vertice1, vertice2);
-                } catch (NumberFormatException e) {
-                    System.out.println("Erro.");
-                }
-            }
+    public static void LerArquivo(String arquivo) throws FileNotFoundException {
+        File leitor = new File(arquivo);
+        Scanner teclado = new Scanner(leitor);
+        int vertices=teclado.nextInt(); //Lê o cabeçalho, pegando as arestas e vertices de lá
+        int arestas=teclado.nextInt();
+        Grafos matriz= new Grafos(arestas, vertices);
+        int i=0;
+        while(teclado.hasNext()){
+            int origem=teclado.nextInt();
+            int destino=teclado.nextInt();
+            matriz.addAresta(origem-1, destino-1, i); //Enquanto tiverem linhas, ele as lerá e armazenará na matriz
+            i++;
         }
+        teclado = new Scanner(System.in);
+        System.out.println("O arquivo foi lido e armazenado. Por favor, digite o vertice que voce deseja investigar:");
+       int vert= teclado.nextInt();
+       int entrada= matriz.getGrauEntrada(vert-1);
+       int saida= matriz.getGrauSaida(vert-1); 
+       System.out.println("O grau de entrada e: " +entrada); //Faz as operações com os vértices relativos
+       System.out.println("O grau de saida e: " +saida);
+       matriz.getSucessores(vert);
+       matriz.getPredecessores(vert);
+       teclado.close();
     }
 }
