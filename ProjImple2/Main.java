@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
-        String arquivo = "Projetos-Grafos/ProjImple2/graph-test-100-1.txt"; //Mude o path aqui
+        String arquivo = "Projetos-Grafos/ProjImple2/graph-test-100-1.txt"; 
         Grafos grafo = lerArquivo(arquivo);
         
         Scanner teclado = new Scanner(System.in);
